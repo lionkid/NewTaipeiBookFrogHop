@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1024">
+  <title>台灣旅行樹蛙去新北～</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans TC', 'Microsoft JhengHei', system-ui, sans-serif;
+      background: #E3F2FD;
+      min-height: 100vh;
+      color: #333;
+    }
+
+    #app {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 12px 16px 20px;
+    }
+
+    /* ── HEADER ── */
+    #header {
+      text-align: center;
+      background: linear-gradient(135deg, #4CAF50, #2E7D32);
+      border-radius: 16px;
+      padding: 14px 20px 10px;
+      margin-bottom: 12px;
+      color: white;
+      box-shadow: 0 4px 12px rgba(76,175,80,0.35);
+    }
+    #header h1 {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      line-height: 1.2;
+    }
+    #header .date-display {
+      font-size: 16px;
+      margin-top: 4px;
+      opacity: 0.9;
+    }
+
+    /* ── TOP SECTION ── */
+    #top-section {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    /* ── FROG AREA ── */
+    #frog-area {
+      width: 240px;
+      min-width: 240px;
+      background: linear-gradient(180deg, #FFFDE7 0%, #F9FBE7 100%);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 16px 12px 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+      min-height: 260px;
+    }
+    #frog-area .sky {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 60px;
+      background: linear-gradient(180deg, #B3E5FC 0%, #E3F2FD 100%);
+      border-radius: 16px 16px 0 0;
+    }
+    #frog-area .cloud {
+      position: absolute;
+      top: 10px;
+      background: white;
+      border-radius: 20px;
+      opacity: 0.8;
+      animation: cloudFloat 6s ease-in-out infinite;
+    }
+    #frog-area .cloud:nth-child(2) { width: 44px; height: 18px; left: 20px; animation-delay: -2s; }
+    #frog-area .cloud:nth-child(3) { width: 32px; height: 14px; right: 25px; top: 22px; animation-delay: -4s; }
+    @keyframes cloudFloat {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(5px); }
+    }
+
+    /* frog container */
+    #frog-container {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* stars for departing state */
+    .frog-stars {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: none;
+    }
+    #frog-container.departing .frog-stars { display: block; }
+    .star {
+      position: absolute;
+      font-size: 18px;
+      animation: starPop 0.8s ease-out infinite;
+    }
+    .star:nth-child(1) { top: 0; left: -30px; animation-delay: 0s; }
+    .star:nth-child(2) { top: -10px; left: 10px; animation-delay: 0.2s; }
+    .star:nth-child(3) { top: 0; left: 45px; animation-delay: 0.4s; }
+    @keyframes starPop {
+      0% { opacity: 0; transform: scale(0); }
+      50% { opacity: 1; transform: scale(1.2); }
+      100% { opacity: 0; transform: scale(0.5) translateY(-10px); }
+    }
+
+    /* SVG frog itself */
+    #frog-svg {
+      width: 140px;
+      height: 140px;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+    }
+    /* frog animations */
+    #frog-container.waiting #frog-svg {
+      animation: frogWait 3s ease-in-out infinite;
+    }
+    @keyframes frogWait {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-4px) rotate(-1deg); }
+      75% { transform: translateY(-2px) rotate(1deg); }
+    }
+    #frog-container.happy #frog-svg {
+      animation: frogJump 0.35s ease-out;
+    }
+    @keyframes frogJump {
+      0% { transform: translateY(0) scale(1); }
+      40% { transform: translateY(-22px) scale(1.1); }
+      100% { transform: translateY(0) scale(1); }
+    }
+    #frog-container.departing #frog-svg {
+      animation: frogWave 0.7s ease-in-out infinite;
+    }
+    @keyframes frogWave {
+      0%, 100% { transform: rotate(-5deg); }
+      50% { transform: rotate(5deg) translateY(-4px); }
+    }
+
+    /* luggage */
+    .frog-luggage {
+      width: 90px;
+      height: 58px;
+      background: linear-gradient(135deg, #FF8A65, #F4511E);
+      border-radius: 10px;
+      position: relative;
+      margin-top: -12px;
+      z-index: 1;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+    .frog-luggage::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0; right: 0;
+      height: 3px;
+      background: rgba(0,0,0,0.15);
+      transform: translateY(-50%);
+    }
+    .frog-luggage::after {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 26px;
+      height: 14px;
+      background: #E64A19;
+      border-radius: 4px 4px 0 0;
+      border: 2px solid rgba(0,0,0,0.1);
+    }
+
+    #frog-area .frog-status {
+      font-size: 13px;
+      color: #558B2F;
+      font-weight: 700;
+      text-align: center;
+      margin-top: 8px;
+      min-height: 18px;
+    }
+
+    /* ── LOCATION CARD ── */
+    #location-card {
+      flex: 1;
+      background: white;
+      border-radius: 16px;
+      padding: 18px 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .book-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      width: fit-content;
+    }
+    .location-name {
+      font-size: 32px;
+      font-weight: 900;
+      color: #1A237E;
+      line-height: 1.2;
+    }
+    .location-description {
+      font-size: 18px;
+      line-height: 1.8;
+      color: #444;
+    }
+    .hint-box {
+      background: #FFF8E1;
+      border: 2px solid #FFD54F;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 15px;
+      color: #5D4037;
+      line-height: 1.6;
+    }
+    .district-info {
+      font-size: 15px;
+      color: #666;
+      font-weight: 700;
+    }
+
+    /* expandable book quest */
+    .book-quest {
+      background: #F3E5F5;
+      border: 2px solid #CE93D8;
+      border-radius: 10px;
+      font-size: 15px;
+    }
+    .book-quest summary {
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 700;
+      color: #6A1B9A;
+      user-select: none;
+    }
+    .book-quest summary:hover { background: rgba(206,147,216,0.2); border-radius: 8px; }
+    .quest-content {
+      padding: 10px 16px 14px;
+      line-height: 1.8;
+      color: #4A148C;
+    }
+    .quest-content p { margin-bottom: 4px; }
+    .color-swatch {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+      vertical-align: middle;
+      margin-right: 4px;
+    }
+
+    /* ── PACK SECTION ── */
+    #pack-section {
+      background: white;
+      border-radius: 16px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    #pack-section h3 {
+      font-size: 20px;
+      font-weight: 900;
+      color: #2E7D32;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    /* items grid */
+    #items-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 100px);
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+    .item-cell {
+      width: 100px;
+      height: 100px;
+      border: 2px solid #E0E0E0;
+      border-radius: 12px;
+      background: #FAFAFA;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      position: relative;
+      user-select: none;
+    }
+    .item-cell:hover {
+      border-color: #4CAF50;
+      background: #F1F8E9;
+      transform: scale(1.03);
+    }
+    .item-cell.recommended {
+      background: #FFFDE7;
+      border-color: #FFC107;
+    }
+    .item-cell.recommended::before {
+      content: '⭐';
+      position: absolute;
+      top: 3px;
+      right: 4px;
+      font-size: 11px;
+    }
+    .item-cell.selected {
+      border-color: #4CAF50;
+      border-width: 3px;
+      background: #E8F5E9;
+    }
+    .item-cell.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 3px;
+      left: 5px;
+      font-size: 14px;
+      color: #2E7D32;
+      font-weight: 900;
+    }
+    .item-cell.flying {
+      animation: itemFly 0.5s ease-in forwards;
+    }
+    @keyframes itemFly {
+      0% { transform: scale(1) translateY(0); opacity: 1; }
+      100% { transform: scale(0.3) translateY(-80px); opacity: 0; }
+    }
+    .item-emoji { font-size: 48px; line-height: 1; }
+    .item-name { font-size: 12px; font-weight: 700; color: #555; margin-top: 4px; }
+
+    /* pack controls */
+    #pack-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    #pack-btn {
+      background: linear-gradient(135deg, #4CAF50, #2E7D32);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      padding: 12px 28px;
+      font-size: 20px;
+      font-weight: 900;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(76,175,80,0.4);
+      transition: all 0.18s ease;
+    }
+    #pack-btn:hover { transform: scale(1.03); box-shadow: 0 6px 16px rgba(76,175,80,0.5); }
+    #pack-btn.shake { animation: btnShake 0.35s ease-out; }
+    @keyframes btnShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+    #pack-hint {
+      font-size: 16px;
+      color: #E64A19;
+      font-weight: 700;
+      min-height: 24px;
+      text-align: center;
+    }
+
+    /* ── FEEDBACK OVERLAY ── */
+    #feedback-overlay {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border: 4px solid #4CAF50;
+      border-radius: 24px;
+      padding: 28px 36px;
+      max-width: 420px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+      z-index: 1000;
+      animation: popIn 0.3s ease-out;
+    }
+    #feedback-overlay.visible { display: block; }
+    @keyframes popIn {
+      0% { transform: translate(-50%, -50%) scale(0.7); opacity: 0; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+    #feedback-text {
+      font-size: 20px;
+      font-weight: 700;
+      color: #2E7D32;
+      line-height: 1.7;
+    }
+    #feedback-countdown {
+      font-size: 14px;
+      color: #999;
+      margin-top: 10px;
+    }
+
+    /* ── STATS SECTION ── */
+    #stats-section {
+      background: white;
+      border-radius: 16px;
+      padding: 14px 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    #stats-section h3 {
+      font-size: 17px;
+      font-weight: 900;
+      color: #555;
+      margin-bottom: 8px;
+    }
+    #stats-items {
+      font-size: 16px;
+      color: #666;
+      line-height: 2;
+      min-height: 30px;
+    }
+    .stats-item-tag {
+      display: inline-block;
+      background: #E8F5E9;
+      border: 1px solid #A5D6A7;
+      border-radius: 20px;
+      padding: 2px 10px;
+      margin: 2px 4px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <div id="header">
+    <h1>🐸 台灣旅行樹蛙去新北～</h1>
+    <div class="date-display" id="date-display"></div>
+  </div>
+
+  <!-- TOP SECTION -->
+  <div id="top-section">
+
+    <!-- FROG AREA -->
+    <div id="frog-area">
+      <div class="sky"></div>
+      <div class="cloud"></div>
+      <div class="cloud"></div>
+
+      <div id="frog-container" class="waiting">
+        <div class="frog-stars">
+          <span class="star">✨</span>
+          <span class="star">⭐</span>
+          <span class="star">✨</span>
+        </div>
+        <svg id="frog-svg" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+          <!-- Hat (visible in departing state via JS class) -->
+          <g id="frog-hat" style="display:none">
+            <rect x="52" y="10" width="36" height="6" rx="3" fill="#795548"/>
+            <rect x="58" y="0" width="24" height="18" rx="4" fill="#5D4037"/>
+          </g>
+          <!-- Body -->
+          <ellipse cx="70" cy="95" rx="34" ry="26" fill="#66BB6A"/>
+          <!-- Left leg -->
+          <g id="leg-left">
+            <ellipse cx="46" cy="116" rx="10" ry="7" fill="#43A047" transform="rotate(-20 46 116)"/>
+            <ellipse cx="36" cy="124" rx="12" ry="6" fill="#388E3C" transform="rotate(-10 36 124)"/>
+          </g>
+          <!-- Right leg -->
+          <g id="leg-right">
+            <ellipse cx="94" cy="116" rx="10" ry="7" fill="#43A047" transform="rotate(20 94 116)"/>
+            <ellipse cx="104" cy="124" rx="12" ry="6" fill="#388E3C" transform="rotate(10 104 124)"/>
+          </g>
+          <!-- Left arm -->
+          <ellipse cx="38" cy="90" rx="10" ry="6" fill="#66BB6A" transform="rotate(-30 38 90)"/>
+          <!-- Right arm (wave in departing) -->
+          <ellipse id="arm-right" cx="102" cy="90" rx="10" ry="6" fill="#66BB6A" transform="rotate(30 102 90)"/>
+          <!-- Head -->
+          <circle cx="70" cy="64" r="36" fill="#81C784"/>
+          <!-- Head highlight -->
+          <ellipse cx="60" cy="52" rx="12" ry="8" fill="#A5D6A7" opacity="0.5"/>
+          <!-- Left eye white -->
+          <circle cx="56" cy="56" r="13" fill="white"/>
+          <!-- Right eye white -->
+          <circle cx="84" cy="56" r="13" fill="white"/>
+          <!-- Left eye pupil -->
+          <circle cx="58" cy="57" r="7" fill="#1A237E"/>
+          <!-- Right eye pupil -->
+          <circle cx="86" cy="57" r="7" fill="#1A237E"/>
+          <!-- Left eye shine -->
+          <circle cx="60" cy="54" r="3" fill="white"/>
+          <!-- Right eye shine -->
+          <circle cx="88" cy="54" r="3" fill="white"/>
+          <!-- Smile -->
+          <path d="M56 74 Q70 86 84 74" stroke="#2E7D32" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <!-- Nostrils -->
+          <circle cx="66" cy="68" r="2.5" fill="#4CAF50" opacity="0.6"/>
+          <circle cx="74" cy="68" r="2.5" fill="#4CAF50" opacity="0.6"/>
+          <!-- Top eye bumps -->
+          <circle cx="56" cy="44" r="9" fill="#66BB6A"/>
+          <circle cx="84" cy="44" r="9" fill="#66BB6A"/>
+        </svg>
+        <div class="frog-luggage"></div>
+      </div>
+
+      <div class="frog-status" id="frog-status">蛙蛙準備出發囉！</div>
+    </div>
+
+    <!-- LOCATION CARD -->
+    <div id="location-card">
+      <div class="book-badge" id="book-badge"></div>
+      <div class="location-name" id="location-name"></div>
+      <div class="location-description" id="location-desc"></div>
+      <div class="hint-box" id="hint-box"></div>
+      <div class="district-info" id="district-info"></div>
+      <details class="book-quest" id="book-quest">
+        <summary>📖 這個景點在哪本書裡？點我看提示！</summary>
+        <div class="quest-content" id="quest-content"></div>
+      </details>
+    </div>
+
+  </div><!-- /#top-section -->
+
+  <!-- PACK SECTION -->
+  <div id="pack-section">
+    <h3>🎒 幫蛙蛙準備行李！</h3>
+    <div id="items-grid"></div>
+    <div id="pack-controls">
+      <div>
+        <div id="pack-hint"></div>
+        <button id="pack-btn" onclick="handlePackButton()">放進行李箱 🎒（0 樣）</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS SECTION -->
+  <div id="stats-section">
+    <h3>今天 🐸 蛙蛙帶了這些東西去旅行～</h3>
+    <div id="stats-items">還沒有人幫蛙蛙打包唷！快來選選看 👆</div>
+  </div>
+
+</div><!-- /#app -->
+
+<!-- FEEDBACK OVERLAY -->
+<div id="feedback-overlay">
+  <div id="feedback-text"></div>
+  <div id="feedback-countdown"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// DATA LAYER
+// ═══════════════════════════════════════
+
+const LOCATIONS = [
+  // 《轉角新北練習曲》書① 紅色
+  { id: "tamsui", name: "淡水老街", district: "淡水區", book: 1, bookColor: "#E84545", bookName: "轉角新北練習曲",
+    description: "淡水是一個有山有海的地方，老街上有好吃的魚丸和阿給，還有很多人在唱歌、畫畫！",
+    weather: ["晴","微風"], activity: "逛老街、看夕陽", emoji: "🌅",
+    hint: "翻開紅色的書，找找小蛙在老街遇到誰？" },
+
+  { id: "sanxia", name: "三峽老街", district: "三峽區", book: 1, bookColor: "#E84545", bookName: "轉角新北練習曲",
+    description: "三峽老街的建築很特別，每一棟都像一個故事。這裡還有出名的金牛角麵包！",
+    weather: ["晴","涼爽"], activity: "逛老街、看古蹟", emoji: "🏛️",
+    hint: "紅色的書裡，小蛙在三峽老街碰到什麼神奇表演？" },
+
+  { id: "jiufen", name: "九份老街", district: "瑞芳區", book: 1, bookColor: "#E84545", bookName: "轉角新北練習曲",
+    description: "九份在山坡上，有好多紅燈籠，晚上亮起來很像天空中的星星！",
+    weather: ["霧","雨","涼爽"], activity: "看夜景、喝芋圓", emoji: "🏮",
+    hint: "紅色的書裡有九份的夜晚插圖，數數看有幾個燈籠？" },
+
+  { id: "pingxi", name: "平溪老街", district: "平溪區", book: 1, bookColor: "#E84545", bookName: "轉角新北練習曲",
+    description: "平溪最有名的是放天燈！把願望寫在天燈上，讓它飛到天空去。",
+    weather: ["涼爽","雨"], activity: "放天燈、搭小火車", emoji: "🏮",
+    hint: "在紅色的書裡找找，小蛙放的天燈上寫了什麼字？" },
+
+  { id: "shenkeng", name: "石碇老街", district: "石碇區", book: 1, bookColor: "#E84545", bookName: "轉角新北練習曲",
+    description: "石碇老街建在溪邊，房子下面就是水，像是蓋在水面上一樣，超酷的！",
+    weather: ["晴","涼爽"], activity: "逛水岸老街、喝豆腐", emoji: "🏘️",
+    hint: "紅色書裡的石碇，你有看到房子下面的溪水嗎？" },
+
+  { id: "yingge", name: "鶯歌陶瓷老街", district: "鶯歌區", book: 1, bookColor: "#E84545", bookName: "轉角新北練習曲",
+    description: "鶯歌是台灣做陶瓷最有名的地方，街上有好多可愛的碗、杯子和小擺飾！",
+    weather: ["晴"], activity: "做陶、逛陶瓷街", emoji: "🏺",
+    hint: "紅色的書裡，小蛙在鶯歌幫陶藝師傅做了什麼？" },
+
+  // 《金夕窩在新北》書⑧ 黃色
+  { id: "houtong", name: "猴硐貓村", district: "瑞芳區", book: 8, bookColor: "#E8B84B", bookName: "金夕窩在新北",
+    description: "猴硐是一個有好多貓咪的村子！以前這裡挖過很多煤礦，現在貓咪是這裡的主人。",
+    weather: ["涼爽","雨"], activity: "看貓咪、參觀礦坑", emoji: "🐱",
+    hint: "黃色的書裡，小蛙在猴硐車站遇到幾隻貓？" },
+
+  { id: "houtong_mine", name: "猴硐礦坑（瑞三本礦）", district: "瑞芳區", book: 8, bookColor: "#E8B84B", bookName: "金夕窩在新北",
+    description: "很久以前，礦工叔叔每天要爬進黑漆漆的山洞裡挖煤礦，非常辛苦也很危險。",
+    weather: ["涼爽","雨"], activity: "搭礦車、了解礦工生活", emoji: "⛏️",
+    hint: "黃色的書裡，礦工叔叔出坑後要做什麼事？找找看！" },
+
+  { id: "pingxi_mine", name: "新平溪煤礦博物園", district: "平溪區", book: 8, bookColor: "#E8B84B", bookName: "金夕窩在新北",
+    description: "這裡有台灣唯一還能搭的「獨眼小僧」礦車，坐上去就像穿越到以前挖礦的時代！",
+    weather: ["涼爽"], activity: "搭獨眼小僧礦車", emoji: "🚃",
+    hint: "黃色書的最後有一張可以著色的礦車圖，去找找看！" },
+
+  { id: "jiufen_gold", name: "九份採金歷史", district: "瑞芳區", book: 8, bookColor: "#E8B84B", bookName: "金夕窩在新北",
+    description: "很久以前，九份和金瓜石一帶挖出好多黃金！現在還有黃金博物館可以摸到真正的大金塊。",
+    weather: ["霧","涼爽"], activity: "參觀黃金博物館", emoji: "✨",
+    hint: "黃色的書說「小上海」是哪個地方的舊稱？" },
+
+  { id: "houtong_worker", name: "猴硐礦工文史館", district: "瑞芳區", book: 8, bookColor: "#E8B84B", bookName: "金夕窩在新北",
+    description: "礦工叔叔下班後會去礦工澡堂洗澡，還會唱歌！他們雖然工作很辛苦，但感情很好。",
+    weather: ["涼爽"], activity: "了解礦工文化", emoji: "🏭",
+    hint: "黃色書裡說「入坑後白面郎變成烏面發工」是什麼意思？" },
+
+  // 《啟程雲遊新北》書⑨ 藍色
+  { id: "bitan", name: "碧潭吊橋", district: "新店區", book: 9, bookColor: "#4A90D9", bookName: "啟程雲遊新北",
+    description: "碧潭有一座漂亮的吊橋，水是翠綠色的，可以在這裡划小船、看水上表演！",
+    weather: ["晴","炎熱"], activity: "划船、過吊橋", emoji: "🌉",
+    hint: "藍色書裡，碧潭有一場超炫的水上表演，有哪些顏色？" },
+
+  { id: "wulai", name: "烏來瀑布", district: "烏來區", book: 9, bookColor: "#4A90D9", bookName: "啟程雲遊新北",
+    description: "烏來有泰雅族原住民朋友，可以泡溫泉、吃山豬肉，還有雄壯的大瀑布！",
+    weather: ["晴","涼爽"], activity: "泡溫泉、看瀑布、坐台車", emoji: "💦",
+    hint: "藍色書裡烏來有一台小小的台車，它要去哪裡？" },
+
+  { id: "yehliu", name: "野柳地質公園", district: "萬里區", book: 9, bookColor: "#4A90D9", bookName: "啟程雲遊新北",
+    description: "野柳有好多奇形怪狀的岩石，最有名的是「女王頭」，她的脖子越來越細，要好好保護她！",
+    weather: ["晴","風大"], activity: "看女王頭、認識岩石", emoji: "🪨",
+    hint: "藍色書裡野柳像月球表面，你有找到哪些特別的石頭形狀？" },
+
+  { id: "tamsui2", name: "淡水古蹟博物館", district: "淡水區", book: 9, bookColor: "#4A90D9", bookName: "啟程雲遊新北",
+    description: "淡水有紅毛城、小白宮，還有滬尾礮台，以前有外國人住在這裡留下很多歷史故事！",
+    weather: ["晴","微風"], activity: "逛古蹟、了解歷史", emoji: "🏰",
+    hint: "藍色書裡的淡水老街，你找到「林益和堂」了嗎？" },
+
+  { id: "shifen", name: "十分瀑布", district: "平溪區", book: 9, bookColor: "#4A90D9", bookName: "啟程雲遊新北",
+    description: "十分瀑布是台灣最寬的瀑布，像一個大水簾！附近還可以在鐵軌旁邊放天燈。",
+    weather: ["晴","涼爽"], activity: "看瀑布、放天燈", emoji: "🌊",
+    hint: "藍色書裡有十分的火車站和天燈，找找小蛙在哪裡？" },
+
+  { id: "pingxi_lantern", name: "平溪天燈節", district: "平溪區", book: 9, bookColor: "#4A90D9", bookName: "啟程雲遊新北",
+    description: "元宵節時，平溪天空會有好多好多天燈同時飛起來，像星星一樣美麗，全世界都有人來看！",
+    weather: ["涼爽","晴"], activity: "放天燈、許願", emoji: "🔆",
+    hint: "藍色書最後幾頁，小蛙許了什麼願望？" },
+
+  { id: "fulong", name: "福隆沙雕音樂節", district: "貢寮區", book: 9, bookColor: "#4A90D9", bookName: "啟程雲遊新北",
+    description: "福隆海灘有很棒的沙雕藝術節！夏天還有超大的音樂祭，可以和好多人一起跳舞！",
+    weather: ["晴","炎熱"], activity: "看沙雕、聽音樂", emoji: "🎵",
+    hint: "藍色書裡福隆的演唱會，舞台旁邊有什麼在飄？" },
+
+  { id: "xizhi", name: "新北市立圖書館", district: "板橋區", book: 9, bookColor: "#4A90D9", bookName: "啟程雲遊新北",
+    description: "新北市立圖書館超大又超美，裡面有好多書、電影和活動，是全台最棒的圖書館之一！",
+    weather: ["晴","雨"], activity: "看書、借書", emoji: "📚",
+    hint: "你現在就在圖書館！藍色的書有介紹這裡，快去書架找找看！" },
+
+  { id: "zhonghe_water", name: "中和潑水節", district: "中和區", book: 9, bookColor: "#4A90D9", bookName: "啟程雲遊新北",
+    description: "中和住了很多來自東南亞的朋友！每年四月的潑水節，大家在街上互潑水，超級好玩！",
+    weather: ["晴","炎熱"], activity: "玩潑水節", emoji: "💦",
+    hint: "藍色書的潑水節那頁，除了人還有什麼動物在噴水？" },
+
+  { id: "danshui_sunset", name: "淡水夕照", district: "淡水區", book: 9, bookColor: "#4A90D9", bookName: "啟程雲遊新北",
+    description: "淡水的夕陽是台灣最有名的美景之一，金黃色的光灑在河面上，像在發光一樣！",
+    weather: ["晴","微風"], activity: "看夕陽、散步", emoji: "🌇",
+    hint: "藍色書裡，淡水夕陽下小蛙旁邊有一棟什麼顏色的大建築？" },
+
+  { id: "pinglin_tea", name: "坪林茶鄉", district: "坪林區", book: 9, bookColor: "#4A90D9", bookName: "啟程雲遊新北",
+    description: "坪林種了好多茶葉，泡出來的茶香香甜甜。茶葉博物館可以學習怎麼泡一杯好茶！",
+    weather: ["涼爽","霧"], activity: "喝茶、參觀茶園", emoji: "🍵",
+    hint: "藍色書的坪林頁面，有一個很大的茶壺在澆水，你找到了嗎？" },
+
+  { id: "jinguashi", name: "黃金博物館（金瓜石）", district: "瑞芳區", book: 9, bookColor: "#4A90D9", bookName: "啟程雲遊新北",
+    description: "金瓜石的黃金博物館裡有一塊220公斤的大金磚！可以摸摸看，感受一下黃金有多重。",
+    weather: ["霧","涼爽"], activity: "摸大金磚、參觀本山礦坑", emoji: "🥇",
+    hint: "藍色書地圖上，黃金博物館旁邊是哪一條老街？" },
+];
+
+const ITEMS = [
+  { id: "hat",              name: "帽子",     emoji: "🧢", tags: ["晴","炎熱","風大"] },
+  { id: "umbrella",         name: "雨傘",     emoji: "☂️", tags: ["雨","霧"] },
+  { id: "sunscreen",        name: "防曬乳",   emoji: "🧴", tags: ["晴","炎熱","海邊"] },
+  { id: "bottle",           name: "水壺",     emoji: "🫙", tags: ["晴","炎熱","登山"] },
+  { id: "towel",            name: "毛巾",     emoji: "🧣", tags: ["炎熱","泡湯","海邊"] },
+  { id: "coat",             name: "外套",     emoji: "🧥", tags: ["涼爽","寒冷","霧","雨"] },
+  { id: "boots",            name: "雨靴",     emoji: "👢", tags: ["雨","霧","泥巴路"] },
+  { id: "camera",           name: "相機",     emoji: "📷", tags: ["晴","旅遊","風景"] },
+  { id: "snack",            name: "小零食",   emoji: "🍭", tags: ["登山","爬山","遠足"] },
+  { id: "map",              name: "地圖",     emoji: "🗺️", tags: ["旅遊","老街","探索"] },
+  { id: "notebook",         name: "筆記本",   emoji: "📓", tags: ["博物館","老街","學習"] },
+  { id: "swimsuit",         name: "泳衣",     emoji: "🩱", tags: ["海邊","炎熱","划船"] },
+  { id: "flashlight",       name: "手電筒",   emoji: "🔦", tags: ["礦坑","山洞","夜間"] },
+  { id: "helmet",           name: "安全帽",   emoji: "⛑️", tags: ["礦坑","腳踏車","登山"] },
+  { id: "spray",            name: "保濕噴霧", emoji: "💨", tags: ["炎熱","晴","海邊"] },
+  { id: "gloves",           name: "手套",     emoji: "🧤", tags: ["寒冷","涼爽","登山"] },
+  { id: "lantern",          name: "天燈",     emoji: "🏮", tags: ["平溪","節慶","夜間"] },
+  { id: "fishingrod",       name: "釣魚竿",   emoji: "🎣", tags: ["河邊","海邊","溪流"] },
+  { id: "sketchbook",       name: "畫冊",     emoji: "🎨", tags: ["藝術","老街","博物館"] },
+  { id: "insectrepellent",  name: "防蚊液",   emoji: "🌿", tags: ["山區","森林","涼爽"] },
+];
+
+const FEEDBACK = [
+  (n, item, loc) => `蛙蛙說：哇！你幫我帶了 ${n} 樣東西，謝謝你！🐸`,
+  (n, item, loc) => `蛙蛙好開心！行李箱裝滿了，要出發囉！🎒`,
+  (n, item, loc) => `你選的「${item}」超實用！蛙蛙在${loc}一定會用到！🌟`,
+  (n, item, loc) => `太棒了！你知道「${loc}」在哪裡嗎？快去書架找找看吧！📚`,
+  (n, item, loc) => `蛙蛙帶著你的心意出發！旅途平安！🍀`,
+];
+
+// ═══════════════════════════════════════
+// CONSTANTS (static — never recreated)
+// ═══════════════════════════════════════
+
+const BOOK_NUM_MAP = { 1: '書①', 8: '書⑧', 9: '書⑨' };
+const BOOK_COLOR_NAME_MAP = {
+  '#E84545': '紅色',
+  '#E8B84B': '金黃色',
+  '#4A90D9': '藍色'
+};
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+
+let selectedItems = new Set();
+let frogState = 'waiting'; // 'waiting' | 'happy' | 'departing'
+let todayLocation = null;
+let recommendedIds = new Set();
+let happyTimer = null;
+let feedbackTimer = null;
+
+// DOM cache — populated after DOMContentLoaded
+let DOM = {};
+
+// ═══════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════
+
+function getRandomElement(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// ═══════════════════════════════════════
+// LOGIC LAYER
+// ═══════════════════════════════════════
+
+function getTodayLocation() {
+  const BASE_DATE = new Date('2025-01-01T00:00:00');
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const dayIndex = Math.floor((today - BASE_DATE) / (1000 * 60 * 60 * 24));
+  const idx = ((dayIndex % LOCATIONS.length) + LOCATIONS.length) % LOCATIONS.length;
+  console.log('[旅行樹蛙] 今日天數索引:', dayIndex, '→ 景點索引:', idx, '→', LOCATIONS[idx].name);
+  return LOCATIONS[idx];
+}
+
+function getRecommendedItems(location) {
+  const allTags = [...location.weather, ...location.activity.split('、')];
+  return ITEMS.filter(item => item.tags.some(tag => allTags.includes(tag)));
+}
+
+function handleItemClick(itemId) {
+  const cell = DOM.itemsGrid.querySelector(`.item-cell[data-id="${itemId}"]`);
+  if (!cell) return;
+
+  if (selectedItems.has(itemId)) {
+    selectedItems.delete(itemId);
+    cell.classList.remove('selected');
+  } else {
+    selectedItems.add(itemId);
+    cell.classList.add('selected');
+    triggerFrogHappy();
+  }
+  updatePackButton();
+}
+
+function triggerFrogHappy() {
+  if (frogState === 'departing') return;
+  setFrogState('happy');
+  if (happyTimer) clearTimeout(happyTimer);
+  happyTimer = setTimeout(() => {
+    if (frogState === 'happy') setFrogState('waiting');
+  }, 400);
+}
+
+function handlePackButton() {
+  if (selectedItems.size === 0) {
+    DOM.packBtn.classList.remove('shake');
+    void DOM.packBtn.offsetWidth; // reflow to restart animation
+    DOM.packBtn.classList.add('shake');
+    DOM.packHint.textContent = '先幫蛙蛙選一些東西吧！👈';
+    setTimeout(() => { DOM.packHint.textContent = ''; }, 2500);
+    return;
+  }
+
+  // get selected item names for feedback
+  const selIds = [...selectedItems];
+  const selItems = selIds.map(id => ITEMS.find(it => it.id === id)).filter(Boolean);
+  const randomItem = getRandomElement(selItems);
+
+  // fly animation
+  selIds.forEach(id => {
+    const cell = DOM.itemsGrid.querySelector(`.item-cell[data-id="${id}"]`);
+    if (cell) cell.classList.add('flying');
+  });
+
+  // frog departs
+  setFrogState('departing');
+  DOM.frogStatus.textContent = '蛙蛙出發了！掰掰～✈️';
+
+  // show feedback
+  setTimeout(() => {
+    showFeedback(selItems.length, randomItem ? randomItem.name : '', todayLocation.name);
+  }, 450);
+
+  // update stats
+  updateStats(selItems);
+}
+
+function showFeedback(count, itemName, locName) {
+  if (feedbackTimer) { clearInterval(feedbackTimer); feedbackTimer = null; }
+  const msg = getRandomElement(FEEDBACK)(count, itemName, locName);
+  DOM.feedbackText.textContent = msg;
+  DOM.feedbackOverlay.classList.add('visible');
+
+  let secs = 3;
+  DOM.feedbackCountdown.textContent = `${secs} 秒後重新開始…`;
+  feedbackTimer = setInterval(() => {
+    secs--;
+    if (secs > 0) {
+      DOM.feedbackCountdown.textContent = `${secs} 秒後重新開始…`;
+    } else {
+      clearInterval(feedbackTimer);
+      feedbackTimer = null;
+      DOM.feedbackOverlay.classList.remove('visible');
+      resetGame();
+    }
+  }, 1000);
+}
+
+function resetGame() {
+  if (happyTimer) { clearTimeout(happyTimer); happyTimer = null; }
+  selectedItems.clear();
+  DOM.itemsGrid.querySelectorAll('.item-cell').forEach(cell => {
+    cell.classList.remove('selected', 'flying');
+  });
+  setFrogState('waiting');
+  updatePackButton();
+  DOM.frogStatus.textContent = '再幫蛙蛙試試不同的行李吧！';
+  DOM.packHint.textContent = '';
+  setTimeout(() => {
+    DOM.frogStatus.textContent = '蛙蛙準備出發囉！';
+  }, 2500);
+}
+
+function setFrogState(state) {
+  frogState = state;
+  DOM.frogContainer.className = state;
+  DOM.frogHat.style.display = state === 'departing' ? 'block' : 'none';
+}
+
+// ═══════════════════════════════════════
+// RENDER LAYER
+// ═══════════════════════════════════════
+
+function renderHeader() {
+  const now = new Date();
+  const days = ['日','一','二','三','四','五','六'];
+  const dateStr = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日（星期${days[now.getDay()]}）`;
+  document.getElementById('date-display').textContent = `📅 ${dateStr}`;
+  // note: date-display is not cached since it's only written once at init
+}
+
+function renderLocationCard(location) {
+  const colorName = BOOK_COLOR_NAME_MAP[location.bookColor] || '';
+  DOM.bookBadge.style.background = location.bookColor;
+  DOM.bookBadge.textContent = `${BOOK_NUM_MAP[location.book]} 《${location.bookName}》`;
+  DOM.locationName.textContent = `${location.emoji} ${location.name}`;
+  DOM.locationDesc.textContent = location.description;
+  DOM.hintBox.innerHTML = `💡 <strong>在書中找找看：</strong>${location.hint}`;
+  DOM.districtInfo.textContent = `📍 新北市 ${location.district}`;
+  DOM.questContent.innerHTML = `
+    <p>去書架找：<strong>《${location.bookName}》</strong></p>
+    <p>封面顏色：<span class="color-swatch" style="background:${location.bookColor}"></span> ${colorName}</p>
+    <p>翻開找找看：${location.hint}</p>
+  `;
+}
+
+function renderItemGrid(location) {
+  const recommended = getRecommendedItems(location);
+  recommendedIds = new Set(recommended.map(i => i.id));
+
+  DOM.itemsGrid.innerHTML = '';
+  ITEMS.forEach(item => {
+    const cell = document.createElement('div');
+    cell.className = 'item-cell' + (recommendedIds.has(item.id) ? ' recommended' : '');
+    cell.dataset.id = item.id;
+    cell.title = `${item.name}（標籤：${item.tags.join('、')}）`;
+    cell.innerHTML = `<div class="item-emoji">${item.emoji}</div><div class="item-name">${item.name}</div>`;
+    DOM.itemsGrid.appendChild(cell);
+  });
+}
+
+function updatePackButton() {
+  DOM.packBtn.textContent = `放進行李箱 🎒（${selectedItems.size} 樣）`;
+}
+
+function updateStats(selItems) {
+  if (!selItems || selItems.length === 0) {
+    DOM.statsItems.textContent = '還沒有人幫蛙蛙打包唷！快來選選看 👆';
+    return;
+  }
+  DOM.statsItems.innerHTML = selItems.map(it =>
+    `<span class="stats-item-tag">${it.emoji} ${it.name}</span>`
+  ).join('');
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Populate DOM cache
+  DOM = {
+    packBtn:          document.getElementById('pack-btn'),
+    packHint:         document.getElementById('pack-hint'),
+    frogStatus:       document.getElementById('frog-status'),
+    frogContainer:    document.getElementById('frog-container'),
+    frogHat:          document.getElementById('frog-hat'),
+    feedbackOverlay:  document.getElementById('feedback-overlay'),
+    feedbackText:     document.getElementById('feedback-text'),
+    feedbackCountdown:document.getElementById('feedback-countdown'),
+    itemsGrid:        document.getElementById('items-grid'),
+    statsItems:       document.getElementById('stats-items'),
+    bookBadge:        document.getElementById('book-badge'),
+    locationName:     document.getElementById('location-name'),
+    locationDesc:     document.getElementById('location-desc'),
+    hintBox:          document.getElementById('hint-box'),
+    districtInfo:     document.getElementById('district-info'),
+    questContent:     document.getElementById('quest-content'),
+  };
+
+  // Single delegated listener for all item clicks
+  DOM.itemsGrid.addEventListener('click', e => {
+    const cell = e.target.closest('.item-cell');
+    if (cell) handleItemClick(cell.dataset.id);
+  });
+
+  renderHeader();
+  todayLocation = getTodayLocation();
+  renderLocationCard(todayLocation);
+  renderItemGrid(todayLocation);
+  setFrogState('waiting');
+
+  // Entrance message
+  DOM.frogStatus.textContent = `蛙蛙今天要去${todayLocation.emoji} ${todayLocation.name}囉！`;
+  setTimeout(() => {
+    DOM.frogStatus.textContent = '蛙蛙準備出發囉！';
+  }, 2500);
+});
+</script>
+</body>
+</html>
